@@ -45,21 +45,21 @@ python3 bot.py
 Установка на роутере:
 ```sh
 # 1) Скопировать проект на роутер, например:
-mkdir -p /opt/openwrt-telegram-bot
+mkdir -p /root/openwrt-telegram-bot
 # ...скопировать bot.py, requirements.txt и установить зависимости
 
 # 2) Установить init-скрипт
-cp /opt/openwrt-telegram-bot/openwrt/openwrt-telegram-bot.init /etc/init.d/openwrt-telegram-bot
+cp /root/openwrt-telegram-bot/openwrt/openwrt-telegram-bot.init /etc/init.d/openwrt-telegram-bot
 chmod +x /etc/init.d/openwrt-telegram-bot
 
 # 3) Установить конфиг
-cp /opt/openwrt-telegram-bot/openwrt/openwrt-telegram-bot.config /etc/config/openwrt-telegram-bot
+cp /root/openwrt-telegram-bot/openwrt/openwrt-telegram-bot.config /etc/config/openwrt-telegram-bot
 
 # 4) Заполнить токен/доступы
 uci set openwrt-telegram-bot.bot.enabled='1'
 uci set openwrt-telegram-bot.bot.telegram_token='YOUR_BOT_TOKEN'
 uci set openwrt-telegram-bot.bot.allowed_chat_ids='123456789,987654321'
-uci set openwrt-telegram-bot.bot.bot_path='/opt/openwrt-telegram-bot/bot.py'
+uci set openwrt-telegram-bot.bot.bot_path='/root/openwrt-telegram-bot/bot.py'
 uci commit openwrt-telegram-bot
 
 # 5) Включить автозапуск и старт

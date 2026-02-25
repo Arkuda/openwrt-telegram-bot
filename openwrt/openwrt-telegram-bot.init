@@ -12,7 +12,7 @@ start_service() {
     config_get enabled bot enabled "0"
     [ "$enabled" = "1" ] || return 0
 
-    config_get bot_path bot bot_path "/opt/openwrt-telegram-bot/bot.py"
+    config_get bot_path bot bot_path "/root/openwrt-telegram-bot/bot.py"
     config_get python_bin bot python_bin "/usr/bin/python3"
     config_get telegram_token bot telegram_token ""
     config_get allowed_chat_ids bot allowed_chat_ids ""
