@@ -44,11 +44,43 @@ def parse_allowed_chat_ids(raw_value: str | None) -> set[int]:
     return parsed
 
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "")
-ALLOWED_CHAT_IDS = parse_allowed_chat_ids(os.getenv("ALLOWED_CHAT_IDS"))
-RUANTIBLOCK_STATUS_CMD = os.getenv("RUANTIBLOCK_STATUS_CMD", "ruantiblock status")
-RUANTIBLOCK_ADD_CMD = os.getenv("RUANTIBLOCK_ADD_CMD", "ruantiblock add list1 {domain}")
-RUANTIBLOCK_UPDATE_CMD = os.getenv("RUANTIBLOCK_UPDATE_CMD", "ruantiblock update")
+def read_uci_option(option: str) -> str | None:
+    try:
+        completed = subprocess.run(
+            ["uci", "-q", "get", f"openwrt-telegram-bot.bot.{option}"],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=2,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+    if completed.returncode != 0:
+        return None
+
+    value = completed.stdout.strip()
+    return value if value else None
+
+
+def get_config_value(env_name: str, default: str, uci_option: str) -> str:
+    env_value = os.getenv(env_name)
+    if env_value is not None:
+        return env_value
+
+    uci_value = read_uci_option(uci_option)
+    if uci_value is not None:
+        return uci_value
+
+    return default
+
+
+TELEGRAM_TOKEN = get_config_value("TELEGRAM_TOKEN", "", "telegram_token")
+ALLOWED_CHAT_IDS = parse_allowed_chat_ids(get_config_value("ALLOWED_CHAT_IDS", "", "allowed_chat_ids"))
+RUANTIBLOCK_STATUS_CMD = get_config_value("RUANTIBLOCK_STATUS_CMD", "ruantiblock status", "rua_status_cmd")
+RUANTIBLOCK_ADD_CMD = get_config_value("RUANTIBLOCK_ADD_CMD", "ruantiblock add list1 {domain}", "rua_add_cmd")
+RUANTIBLOCK_UPDATE_CMD = get_config_value("RUANTIBLOCK_UPDATE_CMD", "ruantiblock update", "rua_update_cmd")
 
 
 def run_command(command: str) -> str:

@@ -24,6 +24,7 @@ pip install -r requirements.txt
 ```
 
 ## Переменные окружения
+- Если переменные окружения не заданы, бот пробует читать те же параметры из UCI (`openwrt-telegram-bot.bot.*`).
 - `TELEGRAM_TOKEN` — токен бота (обязательно).
 - `ALLOWED_CHAT_IDS` — например: `12345,67890`.
 - `RUANTIBLOCK_STATUS_CMD` — команда для статуса (по умолчанию `ruantiblock status`).
